@@ -24,9 +24,7 @@ class CreateTables extends Migration {
 
         // The rest of the fields...
         $table->string('team_name');
-        $table->float('average_rating');
-        $table->float('monthly_revenue');
-        $table->float('monthly_player_expenditures');
+
         $table->float('percentage');
         
 		//
@@ -44,8 +42,6 @@ class CreateTables extends Migration {
 			$table->string('name');
 			$table->integer('team_id')->unsigned(); # Important! FK has to be unsigned because the PK it will reference is auto-incrementing
 			$table->float('rating');
-			$table->float('monthly_brand_earnings');
-			$table->float('monthly_contract_earnings');
 			
 			# Define foreign keys...
 			$table->foreign('team_id')

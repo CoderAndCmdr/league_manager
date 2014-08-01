@@ -17,15 +17,8 @@ Create a Player
 
 <div class='form-group'>
 	
-	{{ Form::label('monthly_brand_earnings', 'total earnings from brands') }}
-	{{ Form::text('Monthly Brand Earnings') }}
-
-</div>
-
-<div class='form-group'>
-	
-	{{ Form::label('monthly_contract_earnings', 'payed by team') }}
-	{{ Form::text('Monthly Contract Earnings') }}
+	{{ Form::label('monthly_contract_earnings', 'Monthly contract wage payed by team') }}
+	{{ Form::text('monthly_contract_earnings') }}
 
 </div>
 
