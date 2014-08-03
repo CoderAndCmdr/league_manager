@@ -17,8 +17,22 @@ Create a Player
 
 <div class='form-group'>
 	
-	{{ Form::label('monthly_contract_earnings', 'Monthly contract wage payed by team') }}
-	{{ Form::text('monthly_contract_earnings') }}
+	{{ Form::label('yearly_salary', 'Yearly salary expected by player') }}
+	{{ Form::text('yearly_salary') }}
+
+</div>
+
+<div class='form-group'>
+	
+	{{ Form::label('rating', 'Player skill rating') }}
+	{{ Form::text('rating') }}
+
+</div>
+
+<div class='form-group'>
+
+	{{ Form::label('team_id', 'Team') }}
+	{{ Form::select('team_id', $teams); }}
 
 </div>
 

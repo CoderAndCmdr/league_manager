@@ -43,17 +43,68 @@ Route::post('/createateam', function(){
 
 Route::get('/createaplayer', function(){
 
-    return View::make('createaplayer');
+    $teams = Team::getIdNamePair();
+	if (count($teams)==0)
+	{
+		return Redirect::to('/createabrand')->with('flash_message','Must create at least one team first');
+	}
+	else
+	{
+		return View::make('createaplayer')->with('teams', $teams);
+	}
 });
 
 Route::post('/createaplayer', function(){
 
+	$team = Team::find(Input::get('team_id'));
 	$player = new Player;
     $player->name = Input::get('name');
-    $player->monthly_brand_earnings = Input::get('monthly_brand_earnings');
-    $player->monthly_contract_earnings = Input::get('monthly_contract_earnings');
+    $player->yearly_salary = Input::get('yearly_salary');
+    $player->rating = Input::get('rating');
+    $player->team()->associate($team); 
     $player->save();
+
+});
+
+Route::get('/createabrand', function(){
+
+    return View::make('createabrand');
+});
+
+Route::post('/createabrand', function(){
+
+	$brand = new Brand;
+    $brand->name = Input::get('name');
+    $brand->yearly_sponsorship = Input::get('yearly_sponsorship');
+    $brand->save();
 
     return View::make('hello');
 });
+
+Route::get('/signplayertobrand', function(){
+
+    $brands = Brand::getIdNamePair();
+    $players = Player::getIdNamePair();
+   
+
+	if ((count($brands)==0) || (count($players)==0))
+	{
+		return Redirect::to('/createabrand')->with('flash_message','Must create at least one player and one brand first');
+	}
+	else
+	{
+		return View::make('signplayertobrand')->with('brands', $brands)->with('players', $players);
+	}
+});
+
+
+Route::post('/signplayertobrand', function(){
+
+	$brand = Brand::find(Input::get('brand_id'));
+    $player = Player::find(Input::get('player_id'));
+	$player->brands()->attach($brand);
+
+     return View::make('hello');
+  });
+
 

@@ -19,4 +19,17 @@ class Player extends Eloquent {
         return $this->belongsToMany('Brand');
     }
 
+    public static function getIdNamePair() {
+
+        $players = Array();
+
+        $collection = Player::all();  
+
+        foreach($collection as $player) {
+            $players[$player->id] = $player->name;
+        }   
+
+        return $players;  
+    }
+
 }

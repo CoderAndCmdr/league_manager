@@ -42,6 +42,7 @@ class CreateTables extends Migration {
 			$table->string('name');
 			$table->integer('team_id')->unsigned(); # Important! FK has to be unsigned because the PK it will reference is auto-incrementing
 			$table->float('rating');
+			$table->float('yearly_salary');
 			
 			# Define foreign keys...
 			$table->foreign('team_id')
@@ -60,7 +61,7 @@ class CreateTables extends Migration {
 
 			# General data...
 			$table->string('name');
-			$table->float('monthly_sponsorship');
+			$table->float('yearly_sponsorship');
 			# Define foreign keys...
 		});
 

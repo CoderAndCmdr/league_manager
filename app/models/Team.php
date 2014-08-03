@@ -12,4 +12,20 @@ class Team extends Eloquent {
         
     }
 
- }
+    	public static function getIdNamePair() {
+
+		$teams = Array();
+
+		$collection = Team::all();	
+
+		foreach($collection as $team) {
+			$teams[$team->id] = $team->team_name;
+		}	
+
+		return $teams;	
+	}
+
+  	
+}
+
+ 
