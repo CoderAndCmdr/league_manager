@@ -65,21 +65,19 @@ class CreateTables extends Migration {
 			# Define foreign keys...
 		});
 
-	Schema::create('player_brand', function($table) {
+	Schema::create('brand_player', function($table) {
 
 			# AI, PK
 			# none needed
 
 			# General data...
-			$table->integer('player_id')->unsigned();
 			$table->integer('brand_id')->unsigned();
-
+			$table->integer('player_id')->unsigned();
+			
 			# Define foreign keys...
-			$table->foreign('player_id')->references('id')->on('players');
 			$table->foreign('brand_id')->references('id')->on('brands');
-
+			$table->foreign('player_id')->references('id')->on('players');
 		});
-
     }
 	
 	/**
@@ -94,14 +92,14 @@ class CreateTables extends Migration {
 			$table->dropForeign('players_team_id_foreign'); # table_fields_foreign
 		  });
 
-		Schema::table('player_brand', function($table) {
-			$table->dropForeign('player_brand_player_id_foreign'); # table_fields_foreign
-			$table->dropForeign('player_brand_brand_id_foreign');  # table_fields_foreign
+		Schema::table('brand_player', function($table) {
+			$table->dropForeign('brand_player_brand_id_foreign');  # table_fields_foreign
+			$table->dropForeign('brand_player_player_id_foreign'); # table_fields_foreign
 		});
 		
 		Schema::drop('teams');
-		Schema::drop('players');
 		Schema::drop('brands');
-		Schema::drop('player_brand');
+		Schema::drop('players');
+		Schema::drop('brand_player');
 	}
 }

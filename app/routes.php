@@ -26,6 +26,100 @@ Route::get('/', function(){
 	return View::make('hello');
 });
 
+Route::get('/list', function(){
+
+	return Redirect::to('/createateam');
+});
+
+Route::get('/login', function(){
+
+     return View::make('login');
+  });
+
+Route::post('/login', array('before' => 'csrf', function() {
+
+            $credentials = Input::only('email', 'password');
+
+            if (Auth::attempt($credentials, $remember = true)) 
+            {
+                return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
+            }
+            else 
+            {
+                return Redirect::to('/login')->with('flash_message', 'Log in failed; please try again.');
+            }
+
+            return Redirect::to('login');
+        }
+    )
+);
+
+Route::get('/signup', function(){
+
+     return View::make('signup');
+});
+
+// Route::post('/login', function(){
+// 	View::make('hello');
+// });
+
+
+
+Route::post('/signup', function(){
+
+    $rules = array(
+			'email' => 'required|email|unique:users,email',
+			'password' => 'required|min:6'	
+		);			
+
+		# Step 2) 		
+		$validator = Validator::make(Input::all(), $rules);
+
+		# Step 3
+		if($validator->fails()) 
+		{
+
+			return Redirect::to('/signup')
+				->with('flash_message', 'Sign up failed; please fix the errors listed.')
+				->withErrors($validator);
+		}
+
+		$user = new User;
+		$user->email    = Input::get('email');
+		$user->password = Hash::make(Input::get('password'));
+
+		try {
+			$user->save();
+		}
+		catch (Exception $e) {
+			return Redirect::to('/signup')
+				->with('flash_message', 'Sign up failed; please try again.')
+				->withInput();
+		}
+
+		# Log in
+		Auth::login($user);
+
+		return Redirect::to('/createateam')->with('flash_message', 'Welcome to Foobooks!');
+});
+
+Route::get('/logout', function() {
+
+    # Log out
+    Auth::logout();
+
+    # Send them to the homepage
+    return Redirect::to('/');
+
+});
+
+Route::get('/trake', function() {
+
+	$email = Auth::user()->email;
+	echo $email;
+
+});
+
 Route::get('/createateam', function(){
 
 	return View::make('createteam');
@@ -46,7 +140,7 @@ Route::get('/createaplayer', function(){
     $teams = Team::getIdNamePair();
 	if (count($teams)==0)
 	{
-		return Redirect::to('/createabrand')->with('flash_message','Must create at least one team first');
+		return Redirect::to('/createateam')->with('flash_message','Must create at least one team first');
 	}
 	else
 	{
@@ -81,7 +175,7 @@ Route::post('/createabrand', function(){
     return View::make('hello');
 });
 
-Route::get('/signplayertobrand', function(){
+Route::get('/signplayertobrand',  array('before' => 'auth', function(){
 
     $brands = Brand::getIdNamePair();
     $players = Player::getIdNamePair();
@@ -95,16 +189,19 @@ Route::get('/signplayertobrand', function(){
 	{
 		return View::make('signplayertobrand')->with('brands', $brands)->with('players', $players);
 	}
-});
+}));
 
 
 Route::post('/signplayertobrand', function(){
 
+	$player = Player::find(Input::get('player_id'));
 	$brand = Brand::find(Input::get('brand_id'));
-    $player = Player::find(Input::get('player_id'));
+
 	$player->brands()->attach($brand);
 
      return View::make('hello');
   });
+
+
 
 

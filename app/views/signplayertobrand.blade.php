@@ -6,7 +6,7 @@ Create a Team
 
 @section('content')
 
-{{ Form::open(array('url' => 'createateam', 'method' => 'POST')) }}
+{{ Form::open(array('url' => 'signplayertobrand', 'method' => 'POST')) }}
 
 <div class='form-group'>
 
