@@ -14,13 +14,13 @@
 
 	<!-- <a href='/'><img class='logo' src='<?php echo URL::asset('/images/logo@2x.png'); ?>' alt='Foobooks Logo'></a>
  -->
-<!-- 	@if(Auth::check())
+	@if(Auth::check())
 		<a href='/logout'>Log out {{ Auth::user()->email; }}</a><br><br>
-		<a href='/teamview'>View all Teams</a> | 
-		<a href='/playerview'>View all Players</a> 
+		<a href='/list'>Go to main menu</a> 
 	@else 
 		<a href='/signup'>Sign up</a> or <a href='/login'>Log in</a>
-	@endif -->
+		<a href='/list'>Go to main menu</a> 
+	@endif
 	
 	@yield('content')
 
