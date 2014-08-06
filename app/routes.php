@@ -245,7 +245,7 @@ Route::get('/deleteplayer', function(){
 });
 
 Route::post('/deleteplayer', function(){
-	
+
 	$myplayer = Player::find(Input::get('player_id'));	
 	DB::statement('DELETE FROM brand_player WHERE player_id = ?', array($myplayer->id));
 	$myplayer->delete();
@@ -253,22 +253,85 @@ Route::post('/deleteplayer', function(){
 
 });
 
+Route::get('/deleteteam', function(){
+
+    $players = Player::getIdNamePair();
+	if (count($players)==0)
+	{
+		return Redirect::to('/createabrand')->with('flash_message','Must create at least one player first');
+	}
+	else
+	{
+		return View::make('deleteplayer')->with('players', $players);
+	}
+
+});
+
+Route::post('/deleteplayer', function(){
+
+	$myplayer = Player::find(Input::get('player_id'));	
+	DB::statement('DELETE FROM brand_player WHERE player_id = ?', array($myplayer->id));
+	$myplayer->delete();
+	return Redirect::to('/createateam')->with('flash_message','Player succesfully deleted');
+
+});
+
+
 Route::get('/editplayer', function(){
 
 	$players = Player::getIdNamePair();
 	$teams = Team::getIdNamePair();
-	return View::make('editplayer')->with('players', $players)->with('teams', $teams);
+	return View::make('editplayer')->with('teams', $teams)->with('players', $players);
 
 });
+
 
 Route::post('/editplayer', function(){
 	
 	$player = Player::find(Input::get('player_id'));	
-	$player->team_id = Input::get('team_id');
+	$player->name = Input::get('name');
+    $player->yearly_salary = Input::get('yearly_salary');
+    $player->rating = Input::get('rating');
+    $myteam = Team::find(Input::get('team_id'));
+    $player->team_id = Input::get('team_id');
 	$player->save();
 
 });
 
+Route::get('/editteam', function(){
+
+	$teams = Team::getIdNamePair();
+	return View::make('editteam')->with('teams', $teams);
+
+});
+
+Route::post('/editteam', function(){
+	
+	$team = Team::find(Input::get('team_id'));	
+	$team->team_name = Input::get('team_name');
+    $team->percentage = Input::get('percentage');
+    $team->save();
+	$team->save();
+	return Redirect::to('/createateam')->with('flash_message','Team succesfully edited');
+
+});
+
+Route::get('/editbrand', function(){
+
+	$brands = Brand::getIdNamePair();
+	return View::make('editbrand')->with('brands', $brands);
+
+});
+
+Route::post('/editbrand', function(){
+
+	$brand = Brand::find(Input::get('brand_id'));
+	$brand->name = Input::get('name');
+    $brand->yearly_sponsorship = Input::get('yearly_sponsorship');
+    $brand->save();
+	return Redirect::to('/createateam')->with('flash_message','Brand succesfully edited');
+
+});
 
 Route::get('/trake', function() {
 

@@ -1,16 +1,23 @@
 @extends ('_master')
 
 @section('title')
-Create a Brand
+Create a Team
 @stop 
 
 @section('content')
 
-{{ Form::open(array('url' => 'createabrand', 'method' => 'POST')) }}
+{{ Form::open(array('url' => 'editbrand', 'method' => 'POST')) }}
 
 <div class='form-group'>
 	
-	{{ Form::label('name', 'Brand name:') }}
+	{{ Form::label('brand_id', 'Brand to change:') }}
+	{{ Form::select('brand_id', $brands) }}
+
+</div>
+
+<div class='form-group'>
+	
+	{{ Form::label('name', 'New brand name:') }}
 	{{ Form::text('name') }}
 
 </div>
@@ -24,7 +31,7 @@ Create a Brand
 
 <div class='form-group'>
 
-{{ Form::submit('Submit Brand') }}
+{{ Form::submit('Update Brand') }}
 {{ Form::close() }}
 
 </div>

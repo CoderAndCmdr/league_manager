@@ -15,7 +15,7 @@ Display Team Info
 @else 
 <p>
 	@foreach($players as $player) 
-		{{ $player->name; }}
+		{{$player->name}} 
 		<br>
 	@endforeach
 </p>
