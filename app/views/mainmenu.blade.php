@@ -21,8 +21,8 @@
 	@else 
 		<a href='/signup'>Sign up</a> or <a href='/login'>Log in</a>
 	@endif
-	<h1>League Manager</h1>
-	<h2>
+	<h2>League Manager</h2>
+	
 	<div class='menu'>
 	<a href='/viewteaminfo'>View team info</a> 
 	<br>
@@ -53,7 +53,7 @@
 	<br>
 	<a href='/deleteteam'>Delete a team</a> 
 	</div>
-	</h2>
+	
 </body>
 
 </html>
