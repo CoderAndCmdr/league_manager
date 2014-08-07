@@ -1,7 +1,7 @@
 League Manager
 
 Live URL:
-http://p3.gopagoda.com/
+http://league-manager.gopagoda.com/
 
 Description:
 A web application for users to sign up and manage the players, teams, and brands present in a typical sports league.   
