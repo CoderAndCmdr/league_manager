@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+
+	<title>Main menu</title>
+	<link href="" rel="stylesheet">
+	<link rel="stylesheet" href="/styles/league.css" type="text/css">
+</head>
+
+<body>
+
+	@if(Session::get('flash_message'))
+		<div class='flash-message'>{{ Session::get('flash_message') }}</div>
+	@endif
+
+	<a href='/'><img class='logo' src='<?php echo URL::asset('/images/sports.png'); ?>' alt='League Logo'></a>
+	<br>
+ 
+	@if(Auth::check())
+		<a href='/logout'>Log out {{ Auth::user()->email; }}</a><br>
+	@else 
+		<a href='/signup'>Sign up</a> or <a href='/login'>Log in</a>
+	@endif
+	
+	<div class='menu'>
+	<a href='/viewteaminfo'>View team info</a> 
+	<br>
+	<a href='/viewplayerinfo'>View player info</a> 
+	<br>
+	<a href='/viewbrandinfo'>View brand info</a> 
+	<br>	
+	<a href='/createateam'>Create a team</a>
+	<br> 
+	<a href='/createaplayer'>Create a player</a> 
+	<br>
+	<a href='/createabrand'>Create a brand</a> 
+	<br>
+	<a href='/signplayertobrand'>Sign player to brand</a> 
+	<br>
+	<a href='/editteam'>Edit a team</a> 
+	<br>
+	<a href='/editplayer'>Edit/trade a player</a> 
+	<br>
+	<a href='/editbrand'>Edit a brand</a> 
+	<br>
+	<a href='/deleteplayer'>Delete a player</a> 
+	<br>
+	<a href='/deletebrand'>Delete a brand</a> 
+	<br>
+	<a href='/deleteteam'>Delete a team</a> 
+	</div>
+
+</body>
+
+</html>

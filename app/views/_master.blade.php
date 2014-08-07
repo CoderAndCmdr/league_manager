@@ -3,6 +3,8 @@
 <head>
 
 	<title> @yield('title','League_Manager')</title>
+	<link href="" rel="stylesheet">
+	<link rel="stylesheet" href="/styles/league.css" type="text/css">
 
 </head>
 
@@ -10,17 +12,22 @@
 
 	@if(Session::get('flash_message'))
 		<div class='flash-message'>{{ Session::get('flash_message') }}</div>
+		<br>
 	@endif
 
-	<!-- <a href='/'><img class='logo' src='<?php echo URL::asset('/images/logo@2x.png'); ?>' alt='Foobooks Logo'></a>
- -->
+	<a href='/'><img class='logo' src='<?php echo URL::asset('/images/sports.png'); ?>' alt='League Logo'></a>
+    <br>
 	@if(Auth::check())
-		<a href='/logout'>Log out {{ Auth::user()->email; }}</a><br><br>
-		<a href='/list'>Go to main menu</a> 
+		<a href='/logout'>Log out {{ Auth::user()->email; }}</a>  
+		<a class='links' href='/list'>Go to main menu</a>
 	@else 
 		<a href='/signup'>Sign up</a> or <a href='/login'>Log in</a>
-		<a href='/list'>Go to main menu</a> 
+		<a class='links' href='/list'>Go to main menu</a>
 	@endif
+	
+	<br>
+	<br>
+	<br>
 	
 	@yield('content')
 

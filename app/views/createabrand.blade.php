@@ -8,6 +8,12 @@ Create a Brand
 
 {{ Form::open(array('url' => 'createabrand', 'method' => 'POST')) }}
 
+@foreach($errors->all() as $message) 
+		<div class='error'>{{ $message }}</div>
+@endforeach
+
+<br>
+
 <div class='form-group'>
 	
 	{{ Form::label('name', 'Brand name:') }}

@@ -11,19 +11,18 @@
 |
 */
 
-Route::get('mysql-test', function() {
+Route::get('/', function(){
 
-    # Use the DB component to select all the databases
-    $results = DB::select('SHOW DATABASES;');
-
-    # If the "Pre" package is not installed, you should output using print_r instead
-    return Pre::render($results);
+	if(Auth::check())
+		return Redirect::to('/list');
+	else
+		return Redirect::to('login');
 
 });
 
-Route::get('/', function(){
+Route::get('/list', function(){
 
-	return View::make('hello');
+	return View::make('mainmenu');
 
 });
 
@@ -47,10 +46,8 @@ Route::post('/login', array('before' => 'csrf', function() {
             }
 
             return Redirect::to('login');
-        }
-    )
 
-);
+}));
 
 Route::get('/signup', function(){
 
@@ -58,7 +55,7 @@ Route::get('/signup', function(){
 
 });
 
-Route::post('/signup', function(){
+Route::post('/signup', array('before' => 'csrf', function(){
 
     $rules = array(
 			'email' => 'required|email|unique:users,email',
@@ -93,11 +90,11 @@ Route::post('/signup', function(){
 		# Log in
 		Auth::login($user);
 
-		return Redirect::to('/createateam')->with('flash_message', 'Welcome to Foobooks!');
+		return Redirect::to('/list')->with('flash_message', 'Welcome to Foobooks!');
 
-});
+}));
 
-Route::get('/logout', function() {
+Route::get('/logout', array('before' => 'auth', function() {
 
     # Log out
     Auth::logout();
@@ -105,7 +102,7 @@ Route::get('/logout', function() {
     # Send them to the homepage
     return Redirect::to('/list');
 
-});
+}));
 
 Route::get('/viewteaminfo', function(){
 
@@ -207,7 +204,7 @@ Route::post('/viewbrandinfo', function(){
 
 });
 
-Route::get('/deletebrand', function(){
+Route::get('/deletebrand', array('before' => 'auth', function(){
 
     $brands = Brand::getIdNamePair();
 	if (count($brands)==0)
@@ -219,7 +216,7 @@ Route::get('/deletebrand', function(){
 		return View::make('deletebrand')->with('brands', $brands);
 	}
 
-});
+}));
 
 Route::post('/deletebrand', function(){
 	
@@ -230,7 +227,7 @@ Route::post('/deletebrand', function(){
 
 });
 
-Route::get('/deleteplayer', function(){
+Route::get('/deleteplayer', array('before' => 'auth', function(){
 
     $players = Player::getIdNamePair();
 	if (count($players)==0)
@@ -242,7 +239,7 @@ Route::get('/deleteplayer', function(){
 		return View::make('deleteplayer')->with('players', $players);
 	}
 
-});
+}));
 
 Route::post('/deleteplayer', function(){
 
@@ -253,7 +250,7 @@ Route::post('/deleteplayer', function(){
 
 });
 
-Route::get('/deleteteam', function(){
+Route::get('/deleteteam', array('before' => 'auth', function(){
 
     $players = Player::getIdNamePair();
 	if (count($players)==0)
@@ -265,7 +262,7 @@ Route::get('/deleteteam', function(){
 		return View::make('deleteplayer')->with('players', $players);
 	}
 
-});
+}));
 
 Route::post('/deleteplayer', function(){
 
@@ -277,53 +274,94 @@ Route::post('/deleteplayer', function(){
 });
 
 
-Route::get('/editplayer', function(){
+Route::get('/editplayer', array('before' => 'auth', function(){
 
 	$players = Player::getIdNamePair();
 	$teams = Team::getIdNamePair();
 	return View::make('editplayer')->with('teams', $teams)->with('players', $players);
 
-});
-
+}));
 
 Route::post('/editplayer', function(){
+
+	 $rules = array(
+			'name' => 'required|alpha',
+			'yearly_salary' => 'numeric|required|min:100000',	
+			'rating' => 'numeric|min:1|max:99'
+
+		);			
+	
+		$validator = Validator::make(Input::all(), $rules);
+
+		if($validator->fails()) 
+		{
+				return Redirect::to('editplayer')
+				->with('flash_message', 'Edit failed; please fix the errors listed.')
+				->withErrors($validator);
+		}
 	
 	$player = Player::find(Input::get('player_id'));	
 	$player->name = Input::get('name');
     $player->yearly_salary = Input::get('yearly_salary');
     $player->rating = Input::get('rating');
-    $myteam = Team::find(Input::get('team_id'));
     $player->team_id = Input::get('team_id');
-	$player->save();
+    $player->save();
 
 });
 
-Route::get('/editteam', function(){
+Route::get('/editteam', array('before' => 'auth', function(){
 
 	$teams = Team::getIdNamePair();
 	return View::make('editteam')->with('teams', $teams);
 
-});
+}));
 
 Route::post('/editteam', function(){
+
+	$rules = array(
+			'team_name' => 'required|alpha',
+			'percentage' => 'numeric|required|min:0|max:100',			
+		);			
+	
+		$validator = Validator::make(Input::all(), $rules);
+
+		if($validator->fails()) 
+		{
+				return Redirect::to('editteam')
+				->with('flash_message', ' Creation failed; please fix the errors listed.')
+				->withErrors($validator);
+		}
 	
 	$team = Team::find(Input::get('team_id'));	
 	$team->team_name = Input::get('team_name');
     $team->percentage = Input::get('percentage');
     $team->save();
-	$team->save();
 	return Redirect::to('/createateam')->with('flash_message','Team succesfully edited');
 
 });
 
-Route::get('/editbrand', function(){
+Route::get('/editbrand', array('before' => 'auth', function(){
 
 	$brands = Brand::getIdNamePair();
 	return View::make('editbrand')->with('brands', $brands);
 
-});
+}));
 
 Route::post('/editbrand', function(){
+
+	$rules = array(
+			'name' => 'required|alpha',
+			'yearly_sponsorship' => 'numeric|required|min:50000',	
+		);			
+	
+		$validator = Validator::make(Input::all(), $rules);
+
+		if($validator->fails()) 
+		{
+				return Redirect::to('editbrand')
+				->with('flash_message', ' Creation failed; please fix the errors listed.')
+				->withErrors($validator);
+		}
 
 	$brand = Brand::find(Input::get('brand_id'));
 	$brand->name = Input::get('name');
@@ -333,19 +371,25 @@ Route::post('/editbrand', function(){
 
 });
 
-Route::get('/trake', function() {
-
-	$email = Auth::user()->email;
-	echo $email;
-
-});
-
 Route::get('/createateam', array('before'=>'auth', function(){
 
 	return View::make('createteam');
 }));
 
 Route::post('/createateam', function(){
+	$rules = array(
+			'team_name' => 'required|alpha',
+			'percentage' => 'numeric|required|min:0|max:100',	
+			);			
+	
+		$validator = Validator::make(Input::all(), $rules);
+
+		if($validator->fails()) 
+		{
+				return Redirect::to('createateam')
+				->with('flash_message', ' Creation failed; please fix the errors listed.')
+				->withErrors($validator);
+		}
 
 	$team = new Team;
     $team->team_name = Input::get('team_name');
@@ -370,6 +414,22 @@ Route::get('/createaplayer', array('before' => 'auth', function(){
 
 Route::post('/createaplayer', function(){
 
+	$rules = array(
+			'name' => 'required|alpha',
+			'yearly_salary' => 'numeric|required|min:100000',	
+			'rating' => 'numeric|min:1|max:99'
+
+		);			
+	
+		$validator = Validator::make(Input::all(), $rules);
+
+		if($validator->fails()) 
+		{
+				return Redirect::to('createaplayer')
+				->with('flash_message', ' Creation failed; please fix the errors listed.')
+				->withErrors($validator);
+		}
+	
 	$team = Team::find(Input::get('team_id'));
 	$player = new Player;
     $player->name = Input::get('name');
@@ -386,7 +446,20 @@ Route::get('/createabrand',  array('before' => 'auth', function(){
 }));
 
 Route::post('/createabrand', function(){
+		
+		$rules = array(
+			'name' => 'required|alpha',
+			'yearly_sponsorship' => 'numeric|required|min:50000',	
+		);			
+	
+		$validator = Validator::make(Input::all(), $rules);
 
+		if($validator->fails()) 
+		{
+				return Redirect::to('createabrand')
+				->with('flash_message', ' Creation failed; please fix the errors listed.')
+				->withErrors($validator);
+		}
 	$brand = new Brand;
     $brand->name = Input::get('name');
     $brand->yearly_sponsorship = Input::get('yearly_sponsorship');

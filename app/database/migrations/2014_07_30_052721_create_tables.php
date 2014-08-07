@@ -40,7 +40,7 @@ class CreateTables extends Migration {
 
 			# General data...
 			$table->string('name');
-			$table->integer('team_id')->unsigned(); # Important! FK has to be unsigned because the PK it will reference is auto-incrementing
+			$table->integer('team_id')->unsigned()->nullable(); # Important! FK has to be unsigned because the PK it will reference is auto-incrementing
 			$table->float('rating');
 			$table->float('yearly_salary');
 			

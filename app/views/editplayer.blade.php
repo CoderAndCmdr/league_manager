@@ -6,6 +6,12 @@ Edit a Player
 
 @section('content')
 
+@foreach($errors->all() as $message) 
+		<div class='error'>{{ $message }}</div>
+@endforeach
+
+<br>
+
 {{ Form::open(array('url' => 'editplayer', 'method' => 'POST')) }}
 
 <div class='form-group'>

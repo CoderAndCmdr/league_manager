@@ -1,12 +1,18 @@
 @extends ('_master')
 
 @section('title')
-Create a Team
+Edit a Team
 @stop 
 
 @section('content')
 
 {{ Form::open(array('url' => 'editteam', 'method' => 'POST')) }}
+
+@foreach($errors->all() as $message) 
+		<div class='error'>{{ $message }}</div>
+@endforeach
+
+<br>
 
 <div class='form-group'>
 	

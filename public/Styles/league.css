@@ -1,0 +1,26 @@
+body 
+{
+	text-align:center;
+	background-image: url(/images/sports4.png)
+}
+
+.flash-message {
+	width:100%;
+	position:absolute;
+	top:0;
+	left:0;
+	background-color:yellow;
+	text-align:center;
+	padding:5px;
+}
+
+.links {
+	padding-left:40px;
+}
+
+.menu{
+	padding-top:50px;
+}
+
+.form-group{
+	font-family: Helvetica;

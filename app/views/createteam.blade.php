@@ -8,6 +8,12 @@ Create a Team
 
 {{ Form::open(array('url' => 'createateam', 'method' => 'POST')) }}
 
+@foreach($errors->all() as $message) 
+		<div class='error'>{{ $message }}</div>
+@endforeach
+
+<br>
+
 <div class='form-group'>
 	
 	{{ Form::label('team_name', 'Team name') }}
@@ -17,7 +23,7 @@ Create a Team
 
 <div class='form-group'>
 	
-	{{ Form::label('percentage', 'Percentage recieved from brand earnings of players') }}
+	{{ Form::label('percentage', 'Percentage taken from player brand deals') }}
 	{{ Form::text('percentage') }}
 
 </div>

@@ -8,7 +8,14 @@ Create a Team
 
 {{ Form::open(array('url' => 'editbrand', 'method' => 'POST')) }}
 
+@foreach($errors->all() as $message) 
+		<div class='error'>{{ $message }}</div>
+@endforeach
+
+<br>
+
 <div class='form-group'>
+
 	
 	{{ Form::label('brand_id', 'Brand to change:') }}
 	{{ Form::select('brand_id', $brands) }}
