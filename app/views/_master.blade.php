@@ -3,7 +3,7 @@
 <head>
 
 	<title> @yield('title','League_Manager')</title>
-	<link rel="stylesheet" href="styles/league.css" type="text/css">
+	<link rel="stylesheet" href="/Styles/league.css" type="text/css">
 
 </head>
 
@@ -25,7 +25,7 @@
 	@endif
 	
 	<h2>League Manager</h2>
-	
+
 	@yield('content')
 
 </body>

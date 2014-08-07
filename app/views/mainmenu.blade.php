@@ -3,8 +3,7 @@
 <head>
 
 	<title>Main menu</title>
-	<link href="" rel="stylesheet">
-	<link rel="stylesheet" href="/styles/league.css" type="text/css">
+	<link rel="stylesheet" href="/Styles/league.css" type="text/css">
 </head>
 
 <body>
@@ -23,7 +22,7 @@
 	@endif
 	<h2>League Manager</h2>
 	
-	<div class='menu'>
+	<div class='themenu'>
 	<a href='/viewteaminfo'>View team info</a> 
 	<br>
 	<a href='/viewplayerinfo'>View player info</a> 
