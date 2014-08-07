@@ -54,7 +54,7 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
+			'host'      => 'tunnel.pagodabox.com:3306',
 			'database'  => 'League_Manager',
 			'username'  => 'consuela',
 			'password'  => 'TPK6CW9s',
