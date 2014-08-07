@@ -294,9 +294,10 @@ Route::post('/deleteteam', function(){
 	{
 		foreach($players as $player)
 		{
-			$player->team_id = 'Free Agents';
+			$player->team_id = 1;
    			$player->save();
 		}
+		$myteam->delete();
 		return Redirect::to('/list')->with('flash_message','Players made into free agents, team succesfully deleted');
 	}
 
