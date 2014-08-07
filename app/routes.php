@@ -404,7 +404,7 @@ Route::get('/editbrand', array('before' => 'auth', function(){
 Route::post('/editbrand', function(){
 
 	$rules = array(
-			'name' => 'required|alpha_dash:unique:brands',
+			'name' => 'required|alpha_dash|unique:brands',
 			'yearly_sponsorship' => 'numeric|required|min:50000',	
 		);			
 	
@@ -467,7 +467,7 @@ Route::get('/createaplayer', array('before' => 'auth', function(){
 Route::post('/createaplayer', function(){
 
 	$rules = array(
-			'name' => 'required|alpha',
+			'name' => 'required|alpha_dash',
 			'yearly_salary' => 'numeric|required|min:100000',	
 			'rating' => 'numeric|min:1|max:99'
 
@@ -501,7 +501,7 @@ Route::get('/createabrand',  array('before' => 'auth', function(){
 Route::post('/createabrand', function(){
 		
 		$rules = array(
-			'name' => 'required|alpha:unique:brands',
+			'name' => 'required|alpha_dash|unique:brands',
 			'yearly_sponsorship' => 'numeric|required|min:50000',	
 		);			
 	
