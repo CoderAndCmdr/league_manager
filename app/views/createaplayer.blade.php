@@ -35,14 +35,14 @@ Create a Player
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 	{{ Form::label('team_id', 'Team:') }}
 	{{ Form::select('team_id', $teams); }}
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 {{ Form::submit('Submit Player') }}
 {{ Form::close() }}

@@ -28,7 +28,7 @@ Create a Brand
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 {{ Form::submit('Submit Brand') }}
 {{ Form::close() }}

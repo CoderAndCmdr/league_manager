@@ -8,11 +8,18 @@ Display Team Info
 
 <h1>{{ $player['name'] }}</h1>
 <br>
+Team signed to:
+@if ($team->team_name == 'Free Agents')
+	None (Free Agent)
+@else
+	$team->team_name
+@endif
+<br>
 Rating (overall skill level): {{$player->rating}}
 <br>
 Yearly earnings from brands: ${{$brandearn}}
 <br>
-Yearly salary: ${{$player->yearly_salary}}
+Yearly (expected) salary: ${{$player->yearly_salary}}
 <br>
 <br>
 Brands signed to:

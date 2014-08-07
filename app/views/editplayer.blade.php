@@ -14,7 +14,7 @@ Edit a Player
 
 {{ Form::open(array('url' => 'editplayer', 'method' => 'POST')) }}
 
-<div class='form-group'>
+<div class='form-group3'>
 	
 	{{ Form::label('player_id', 'Player to change:') }}
 	{{ Form::select('player_id', $players) }}
@@ -42,16 +42,16 @@ Edit a Player
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 	{{ Form::label('team_id', 'Team:') }}
 	{{ Form::select('team_id', $teams); }}
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
-{{ Form::submit('Submit Player') }}
+{{ Form::submit('Update Player') }}
 {{ Form::close() }}
 
 </div>

@@ -25,9 +25,7 @@
 		<a class='links' href='/list'>Go to main menu</a>
 	@endif
 	
-	<br>
-	<br>
-	<br>
+	<h2>League Manager</h2>
 	
 	@yield('content')
 

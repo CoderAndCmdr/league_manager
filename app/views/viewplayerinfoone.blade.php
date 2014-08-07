@@ -8,14 +8,14 @@ Select a player
 
 {{ Form::open(array('url' => 'viewplayerinfo', 'method' => 'POST')) }}
 
-<div class='form-group'>
+<div class='form-group2'>
 
 	{{ Form::label('player_id', 'Select a player:') }}
 	{{ Form::select('player_id', $players); }}
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 {{ Form::submit('View info') }}
 {{ Form::close() }}

@@ -14,7 +14,7 @@ Create a Team
 
 <br>
 
-<div class='form-group'>
+<div class='form-group3'>
 
 	
 	{{ Form::label('brand_id', 'Brand to change:') }}
@@ -33,10 +33,10 @@ Create a Team
 	
 	{{ Form::label('yearly_sponsorship', 'Yearly sponsorship payed by brand to player:') }}
 	{{ Form::text('yearly_sponsorship') }}
-
+	
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 {{ Form::submit('Update Brand') }}
 {{ Form::close() }}

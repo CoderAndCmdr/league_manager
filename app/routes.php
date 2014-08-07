@@ -11,6 +11,12 @@
 |
 */
 
+Route::get('/get-environment',function() {
+
+    echo "Environment: ".App::environment();
+
+});
+
 Route::get('/', function(){
 
 	if(Auth::check())
@@ -34,18 +40,18 @@ Route::get('/login', function(){
 
 Route::post('/login', array('before' => 'csrf', function() {
 
-            $credentials = Input::only('email', 'password');
+    $credentials = Input::only('email', 'password');
 
-            if (Auth::attempt($credentials, $remember = true)) 
-            {
-                return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
-            }
-            else 
-            {
-                return Redirect::to('/login')->with('flash_message', 'Log in failed; please try again.');
-            }
+    if (Auth::attempt($credentials, $remember = true)) 
+    {
+        return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
+    }
+    else 
+    {        
+        return Redirect::to('/login')->with('flash_message', 'Login failed; please try again.');
+   	}
 
-            return Redirect::to('login');
+    return Redirect::to('login');
 
 }));
 
@@ -63,34 +69,33 @@ Route::post('/signup', array('before' => 'csrf', function(){
 		);			
 
 		# Step 2) 		
-		$validator = Validator::make(Input::all(), $rules);
+	$validator = Validator::make(Input::all(), $rules);
 
 		# Step 3
-		if($validator->fails()) 
-		{
+	if($validator->fails()) 
+	{
+		return Redirect::to('/signup')
+			->with('flash_message', 'Sign up failed; please fix the errors listed.')
+			->withErrors($validator);
+	}
 
-			return Redirect::to('/signup')
-				->with('flash_message', 'Sign up failed; please fix the errors listed.')
-				->withErrors($validator);
-		}
+	$user = new User;
+	$user->email = Input::get('email');
+	$user->password = Hash::make(Input::get('password'));
 
-		$user = new User;
-		$user->email    = Input::get('email');
-		$user->password = Hash::make(Input::get('password'));
-
-		try {
-			$user->save();
-		}
-		catch (Exception $e) {
-			return Redirect::to('/signup')
-				->with('flash_message', 'Sign up failed; please try again.')
-				->withInput();
-		}
+	try {
+		$user->save();
+	}
+	catch (Exception $e) {
+		return Redirect::to('/signup')
+			->with('flash_message', 'Sign up failed; please try again.')
+			->withInput();
+	}
 
 		# Log in
-		Auth::login($user);
+	Auth::login($user);
 
-		return Redirect::to('/list')->with('flash_message', 'Welcome to Foobooks!');
+	return Redirect::to('/list')->with('flash_message', 'Welcome to League Manager!');
 
 }));
 
@@ -109,7 +114,7 @@ Route::get('/viewteaminfo', function(){
     $teams = Team::getIdNamePair();
 	if (count($teams)==0)
 	{
-		return Redirect::to('/createateam')->with('flash_message','Must create at least one team first');
+		return Redirect::to('/list')->with('flash_message','No teams to view');
 	}
 	else
 	{
@@ -139,8 +144,15 @@ Route::post('/viewteaminfo', function(){
 	}
 	  
 	$revenue = $totalrev * ($myteam->percentage)/100;
+	
+	if($myteam->team_name == 'Free Agents')
+	{
+		$expend = 0;
+	}
+
 	if (count($players)!=0)
 		$average = $ratingsum / count($players);
+	
 	if (count($players)==0)
 		return View::make('viewteaminfotwo')->with('team',$myteam)->with('players',$players);
 	else
@@ -155,7 +167,7 @@ Route::get('/viewplayerinfo', function(){
     $players = Player::getIdNamePair();
 	if (count($players)==0)
 	{
-		return Redirect::to('/createaplayer')->with('flash_message','Must create at least one player first');
+		return Redirect::to('/list')->with('flash_message','No players to view');
 	}
 	else
 	{
@@ -167,6 +179,7 @@ Route::get('/viewplayerinfo', function(){
 Route::post('/viewplayerinfo', function(){
 
 	$myplayer = Player::find(Input::get('player_id'));	
+	$team = $myplayer->team;
 	$brands = $myplayer->brands;
 	$sum = 0;
 	foreach($brands as $onebr)
@@ -176,7 +189,7 @@ Route::post('/viewplayerinfo', function(){
 	$brandearn = $sum * (100 - $myplayer->team->percentage)/100;
 
 	return View::make('viewplayerinfotwo')->with('player',$myplayer)
-	->with('brands',$brands)->with('brandearn',$brandearn);	
+	->with('brands',$brands)->with('brandearn',$brandearn)->with('team',$team);	
 
 });
 
@@ -185,7 +198,7 @@ Route::get('/viewbrandinfo', function(){
     $brands = Brand::getIdNamePair();
 	if (count($brands)==0)
 	{
-		return Redirect::to('/createabrand')->with('flash_message','Must create at least one brand first');
+		return Redirect::to('/list')->with('flash_message','Must create at least one brand first');
 	}
 	else
 	{
@@ -209,7 +222,7 @@ Route::get('/deletebrand', array('before' => 'auth', function(){
     $brands = Brand::getIdNamePair();
 	if (count($brands)==0)
 	{
-		return Redirect::to('/createabrand')->with('flash_message','Must create at least one brand first');
+		return Redirect::to('/list')->with('flash_message','No brands to delete');
 	}
 	else
 	{
@@ -223,7 +236,8 @@ Route::post('/deletebrand', function(){
 	$mybrand = Brand::find(Input::get('brand_id'));	
 	DB::statement('DELETE FROM brand_player WHERE brand_id = ?', array($mybrand->id));
 	$mybrand->delete();
-	Redirect::to('/createateam')->with('flash_message','Brand succesfully deleted');
+
+	return Redirect::to('/list')->with('flash_message','Brand succesfully deleted');
 
 });
 
@@ -232,7 +246,7 @@ Route::get('/deleteplayer', array('before' => 'auth', function(){
     $players = Player::getIdNamePair();
 	if (count($players)==0)
 	{
-		return Redirect::to('/createabrand')->with('flash_message','Must create at least one player first');
+		return Redirect::to('/list')->with('flash_message','No players to delete');
 	}
 	else
 	{
@@ -246,30 +260,50 @@ Route::post('/deleteplayer', function(){
 	$myplayer = Player::find(Input::get('player_id'));	
 	DB::statement('DELETE FROM brand_player WHERE player_id = ?', array($myplayer->id));
 	$myplayer->delete();
-	return Redirect::to('/createateam')->with('flash_message','Player succesfully deleted');
+
+	return Redirect::to('/list')->with('flash_message','Player succesfully deleted');
 
 });
 
 Route::get('/deleteteam', array('before' => 'auth', function(){
 
-    $players = Player::getIdNamePair();
-	if (count($players)==0)
+    $teams = Team::getIdNamePair();
+	if (count($teams)==0)
 	{
-		return Redirect::to('/createabrand')->with('flash_message','Must create at least one player first');
+		return Redirect::to('/list')->with('flash_message','No teams to delete');
 	}
 	else
 	{
-		return View::make('deleteplayer')->with('players', $players);
+		return View::make('deleteteam')->with('teams', $teams);
 	}
 
 }));
 
-Route::post('/deleteplayer', function(){
+Route::post('/deleteteam', function(){
 
-	$myplayer = Player::find(Input::get('player_id'));	
-	DB::statement('DELETE FROM brand_player WHERE player_id = ?', array($myplayer->id));
-	$myplayer->delete();
-	return Redirect::to('/createateam')->with('flash_message','Player succesfully deleted');
+	$myteam = Team::find(Input::get('team_id'));	
+	$players = Player::where('team_id', '=', (Input::get('team_id')))->get();
+	
+	if ($myteam->team_name == "Free Agents")
+	{
+		return Redirect::to('/list')->with('flash_message','Cannot delete Free Agents');
+	}
+
+	elseif (count($players)==0)
+	{
+		$myteam->delete();
+		return Redirect::to('/list')->with('flash_message','Team succesfully deleted');
+	}
+	
+	else 
+	{
+		foreach($players as $player)
+		{
+			$player->team_id = 'Free Agents';
+   			$player->save();
+		}
+		return Redirect::to('/list')->with('flash_message','Players made into free agents, team succesfully deleted');
+	}
 
 });
 
@@ -278,27 +312,33 @@ Route::get('/editplayer', array('before' => 'auth', function(){
 
 	$players = Player::getIdNamePair();
 	$teams = Team::getIdNamePair();
-	return View::make('editplayer')->with('teams', $teams)->with('players', $players);
-
+	if (count($players)==0)
+	{
+		return Redirect::to('/list')->with('flash_message','No players to edit');
+	}
+	else
+	{
+		return View::make('editplayer')->with('teams', $teams)->with('players', $players);
+	}
 }));
 
 Route::post('/editplayer', function(){
 
-	 $rules = array(
-			'name' => 'required|alpha',
+	$rules = array(
+			'name' => 'required|alpha_dash',
 			'yearly_salary' => 'numeric|required|min:100000',	
 			'rating' => 'numeric|min:1|max:99'
 
 		);			
 	
-		$validator = Validator::make(Input::all(), $rules);
+	$validator = Validator::make(Input::all(), $rules);
 
-		if($validator->fails()) 
-		{
-				return Redirect::to('editplayer')
-				->with('flash_message', 'Edit failed; please fix the errors listed.')
-				->withErrors($validator);
-		}
+	if($validator->fails()) 
+	{
+		return Redirect::to('editplayer')
+			->with('flash_message', 'Edit failed; please fix the errors listed.')
+			->withErrors($validator);
+	}
 	
 	$player = Player::find(Input::get('player_id'));	
 	$player->name = Input::get('name');
@@ -306,20 +346,29 @@ Route::post('/editplayer', function(){
     $player->rating = Input::get('rating');
     $player->team_id = Input::get('team_id');
     $player->save();
+   
+    return Redirect::to('/list')->with('flash_message','Player succesfully updated/signed/traded');
 
 });
 
 Route::get('/editteam', array('before' => 'auth', function(){
 
 	$teams = Team::getIdNamePair();
-	return View::make('editteam')->with('teams', $teams);
+	if (count($teams)==0)
+	{
+		return Redirect::to('/list')->with('flash_message','No teams to edit');	
+	}
+	else
+	{
+		return View::make('editteam')->with('teams', $teams);
+	}
 
 }));
 
 Route::post('/editteam', function(){
 
 	$rules = array(
-			'team_name' => 'required|alpha',
+			'team_name' => 'required|alpha_dash|unique:teams',
 			'percentage' => 'numeric|required|min:0|max:100',			
 		);			
 	
@@ -331,26 +380,36 @@ Route::post('/editteam', function(){
 				->with('flash_message', ' Creation failed; please fix the errors listed.')
 				->withErrors($validator);
 		}
-	
+
 	$team = Team::find(Input::get('team_id'));	
+	if ($team->team_name == 'Free Agents')
+		return Redirect::to('/list')->with('flash_message','Cannot edit Free Agents');	
 	$team->team_name = Input::get('team_name');
     $team->percentage = Input::get('percentage');
     $team->save();
-	return Redirect::to('/createateam')->with('flash_message','Team succesfully edited');
+	
+	return Redirect::to('/list')->with('flash_message','Team succesfully updated');
 
 });
 
 Route::get('/editbrand', array('before' => 'auth', function(){
 
 	$brands = Brand::getIdNamePair();
-	return View::make('editbrand')->with('brands', $brands);
+	if (count($brands)==0)
+	{
+		return Redirect::to('/list')->with('flash_message','No brands to delete');
+	}
+	else
+	{
+		return View::make('editbrand')->with('brands', $brands);
+	}
 
 }));
 
 Route::post('/editbrand', function(){
 
 	$rules = array(
-			'name' => 'required|alpha',
+			'name' => 'required|alpha_dash:unique:brands',
 			'yearly_sponsorship' => 'numeric|required|min:50000',	
 		);			
 	
@@ -367,7 +426,8 @@ Route::post('/editbrand', function(){
 	$brand->name = Input::get('name');
     $brand->yearly_sponsorship = Input::get('yearly_sponsorship');
     $brand->save();
-	return Redirect::to('/createateam')->with('flash_message','Brand succesfully edited');
+	
+	return Redirect::to('/list')->with('flash_message','Brand succesfully updated');
 
 });
 
@@ -377,8 +437,9 @@ Route::get('/createateam', array('before'=>'auth', function(){
 }));
 
 Route::post('/createateam', function(){
+	
 	$rules = array(
-			'team_name' => 'required|alpha',
+			'team_name' => 'required|alpha_dash|unique:teams',
 			'percentage' => 'numeric|required|min:0|max:100',	
 			);			
 	
@@ -395,21 +456,17 @@ Route::post('/createateam', function(){
     $team->team_name = Input::get('team_name');
     $team->percentage = Input::get('percentage');
     $team->save();
+	
+	return Redirect::to('/list')->with('flash_message', 'Team succesfully created');
 
-    return View::make('hello');
 });
 
 Route::get('/createaplayer', array('before' => 'auth', function(){
 
     $teams = Team::getIdNamePair();
-	if (count($teams)==0)
-	{
-		return Redirect::to('/createateam')->with('flash_message','Must create at least one team first');
-	}
-	else
-	{
-		return View::make('createaplayer')->with('teams', $teams);
-	}
+	
+	return View::make('createaplayer')->with('teams', $teams);
+	
 }));
 
 Route::post('/createaplayer', function(){
@@ -437,6 +494,7 @@ Route::post('/createaplayer', function(){
     $player->rating = Input::get('rating');
     $player->team()->associate($team); 
     $player->save();
+    return Redirect::to('/list')->with('flash_message', 'Player succesfully created');
 
 });
 
@@ -448,7 +506,7 @@ Route::get('/createabrand',  array('before' => 'auth', function(){
 Route::post('/createabrand', function(){
 		
 		$rules = array(
-			'name' => 'required|alpha',
+			'name' => 'required|alpha:unique:brands',
 			'yearly_sponsorship' => 'numeric|required|min:50000',	
 		);			
 	
@@ -465,7 +523,7 @@ Route::post('/createabrand', function(){
     $brand->yearly_sponsorship = Input::get('yearly_sponsorship');
     $brand->save();
 
-    return View::make('hello');
+    return Redirect::to('/list')->with('flash_message', 'Brand succesfully created');
 });
 
 Route::get('/signplayertobrand',  array('before' => 'auth', function(){
@@ -476,7 +534,7 @@ Route::get('/signplayertobrand',  array('before' => 'auth', function(){
 
 	if ((count($brands)==0) || (count($players)==0))
 	{
-		return Redirect::to('/createabrand')->with('flash_message','Must create at least one player and one brand first');
+		return Redirect::to('/list')->with('flash_message','Must create at least one player and one brand first');
 	}
 	else
 	{
@@ -491,7 +549,7 @@ Route::post('/signplayertobrand', function(){
 
 	$player->brands()->attach($brand);
 
-     return View::make('hello');
+    return Redirect::to('/list')->with('flash_message','Player succesfully signed to brand');
 
 });
 

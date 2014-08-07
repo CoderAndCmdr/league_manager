@@ -1,12 +1,12 @@
 @extends ('_master')
 
 @section('title')
-Select a team
+Select a player
 @stop 
 
 @section('content')
 
-{{ Form::open(array('url' => 'viewteaminfo', 'method' => 'POST')) }}
+{{ Form::open(array('url' => 'deleteteam', 'method' => 'POST')) }}
 
 <div class='form-group2'>
 
@@ -17,7 +17,7 @@ Select a team
 
 <div class='form-group2'>
 
-{{ Form::submit('View info') }}
+{{ Form::submit('Delete Team') }}
 {{ Form::close() }}
 
 </div>

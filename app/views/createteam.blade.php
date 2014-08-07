@@ -16,19 +16,19 @@ Create a Team
 
 <div class='form-group'>
 	
-	{{ Form::label('team_name', 'Team name') }}
+	{{ Form::label('team_name', 'Team name:') }}
 	{{ Form::text('team_name') }}
 
 </div>
 
 <div class='form-group'>
 	
-	{{ Form::label('percentage', 'Percentage taken from player brand deals') }}
+	{{ Form::label('percentage', 'Percentage taken from player brand deals:') }}
 	{{ Form::text('percentage') }}
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 {{ Form::submit('Submit Team') }}
 {{ Form::close() }}

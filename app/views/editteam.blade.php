@@ -14,7 +14,7 @@ Edit a Team
 
 <br>
 
-<div class='form-group'>
+<div class='form-group3'>
 	
 	{{ Form::label('team_id', 'Team to change:') }}
 	{{ Form::select('team_id', $teams) }}
@@ -35,7 +35,7 @@ Edit a Team
 
 </div>
 
-<div class='form-group'>
+<div class='form-group2'>
 
 {{ Form::submit('Update Team') }}
 {{ Form::close() }}

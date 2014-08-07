@@ -25,7 +25,7 @@ class CreateTables extends Migration {
         // The rest of the fields...
         $table->string('team_name');
 
-        $table->float('percentage');
+        $table->float('percentage')->nullable();
         
 		//
 	});

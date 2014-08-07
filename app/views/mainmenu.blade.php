@@ -21,7 +21,8 @@
 	@else 
 		<a href='/signup'>Sign up</a> or <a href='/login'>Log in</a>
 	@endif
-	
+	<h1>League Manager</h1>
+	<h2>
 	<div class='menu'>
 	<a href='/viewteaminfo'>View team info</a> 
 	<br>
@@ -29,6 +30,7 @@
 	<br>
 	<a href='/viewbrandinfo'>View brand info</a> 
 	<br>	
+	<br>
 	<a href='/createateam'>Create a team</a>
 	<br> 
 	<a href='/createaplayer'>Create a player</a> 
@@ -37,11 +39,13 @@
 	<br>
 	<a href='/signplayertobrand'>Sign player to brand</a> 
 	<br>
+	<br>
 	<a href='/editteam'>Edit a team</a> 
 	<br>
-	<a href='/editplayer'>Edit/trade a player</a> 
+	<a href='/editplayer'>Edit/trade/sign a player</a> 
 	<br>
 	<a href='/editbrand'>Edit a brand</a> 
+	<br>
 	<br>
 	<a href='/deleteplayer'>Delete a player</a> 
 	<br>
@@ -49,7 +53,7 @@
 	<br>
 	<a href='/deleteteam'>Delete a team</a> 
 	</div>
-
+	</h2>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 body 
 {
 	text-align:center;
-	background-image: url(/images/sports4.png)
+	background-image: url(/images/sports2.png)
 }
 
 .flash-message {
@@ -24,3 +24,17 @@ body
 
 .form-group{
 	font-family: Helvetica;
+	text-align: right;
+	margin-right: 550px;
+}
+
+.form-group2{
+	font-family: Helvetica;
+	text-align: center;	
+}
+
+.form-group3{
+	font-family: Helvetica;
+	margin-right: 125px;
+	
+}
