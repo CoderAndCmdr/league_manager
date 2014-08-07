@@ -363,10 +363,22 @@ Route::get('/editteam', array('before' => 'auth', function(){
 
 Route::post('/editteam', function(){
 
-	$rules = array(
+	$team = Team::find(Input::get('team_id'));	
+
+	if($team->team_name == Input::get('team_name'))
+	{
+		$rules = array(
+			'team_name' => 'required|alpha_dash',
+			'percentage' => 'numeric|required|min:0|max:100',			
+		);	
+	}
+	else
+	{
+		$rules = array(
 			'team_name' => 'required|alpha_dash|unique:teams',
 			'percentage' => 'numeric|required|min:0|max:100',			
-		);			
+		);	
+	}		
 	
 		$validator = Validator::make(Input::all(), $rules);
 
@@ -377,7 +389,6 @@ Route::post('/editteam', function(){
 				->withErrors($validator);
 		}
 
-	$team = Team::find(Input::get('team_id'));	
 	if ($team->team_name == 'Free Agents')
 		return Redirect::to('/list')->with('flash_message','Cannot edit Free Agents');	
 	$team->team_name = Input::get('team_name');
@@ -404,21 +415,32 @@ Route::get('/editbrand', array('before' => 'auth', function(){
 
 Route::post('/editbrand', function(){
 
-	$rules = array(
-			'name' => 'required|alpha_dash|unique:brands',
-			'yearly_sponsorship' => 'numeric|required|min:50000',	
-		);			
-	
-		$validator = Validator::make(Input::all(), $rules);
-
-		if($validator->fails()) 
-		{
-				return Redirect::to('editbrand')
-				->with('flash_message', ' Creation failed; please fix the errors listed.')
-				->withErrors($validator);
-		}
-
 	$brand = Brand::find(Input::get('brand_id'));
+	
+	if($brand->name == Input::get('name'))
+	{	
+		$rules = array(
+		'name' => 'required|alpha_dash',
+		'yearly_sponsorship' => 'numeric|required|min:50000',	
+		);		
+	}
+	else
+	{
+		$rules = array(
+		'name' => 'required|alpha_dash|unique:brands',
+		'yearly_sponsorship' => 'numeric|required|min:50000',	
+		);	
+	}
+	
+	$validator = Validator::make(Input::all(), $rules);
+
+	if($validator->fails()) 
+	{
+		return Redirect::to('editbrand')
+			->with('flash_message', ' Creation failed; please fix the errors listed.')
+			->withErrors($validator);
+	}
+
 	$brand->name = Input::get('name');
     $brand->yearly_sponsorship = Input::get('yearly_sponsorship');
     $brand->save();
