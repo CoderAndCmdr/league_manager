@@ -12,7 +12,7 @@ Team signed to:
 @if ($team->team_name == 'Free Agents')
 	None (Free Agent)
 @else
-	$team->team_name
+	{{$team->team_name}}
 @endif
 <br>
 Rating (overall skill level): {{$player->rating}}
